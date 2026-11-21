@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2B0B5E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Bingo TV">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="icon" href="icon.svg">
+<title>Bingo TV</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Lilita+One&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#2B0B5E;--bg2:#12043A;--panel:#4A1FA0;--ink:#FFFFFF;--mute:#CDB8FF;--pink:#FF2E88;--cyan:#27E1F2;--gold:#FFD21F;--blue1:#3E63FF;--blue2:#1B2BB5;--dark:#1A0845;
+--safe-t:env(safe-area-inset-top,0px);--safe-b:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;color:var(--ink);font-family:"Baloo 2",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-weight:600}
+html{background:var(--bg2)}
+body{min-height:100dvh;padding:calc(var(--safe-t) + 14px) 14px calc(var(--safe-b) + 24px);max-width:560px;margin:0 auto;
+background:radial-gradient(ellipse 90% 50% at 50% 0%,#7B3FE4 0%,transparent 70%),radial-gradient(ellipse 60% 40% at 0% 100%,#FF2E8855 0%,transparent 70%),radial-gradient(ellipse 60% 40% at 100% 100%,#27E1F244 0%,transparent 70%),linear-gradient(var(--bg),var(--bg2));background-attachment:fixed}
+h1,h2,.display{font-family:"Lilita One","Baloo 2",system-ui,sans-serif;font-weight:400;letter-spacing:.5px}
+h2{font-size:22px;margin:0;line-height:1.1;text-shadow:0 2px 0 #0006}
+p.sub{color:var(--mute);margin:0 0 18px;text-align:center}
+/* Marquee */
+.marquee{position:relative;text-align:center;padding:26px 12px 22px;margin:4px 0 12px;border-radius:20px;background:linear-gradient(180deg,var(--pink),#C4126A);border:4px solid var(--gold);box-shadow:0 6px 0 #7A0A42,0 14px 30px #0008}
+.marquee h1{margin:0;font-size:44px;line-height:1;color:#fff;text-shadow:0 3px 0 #7A0A42,0 0 18px #FFD21F88;transform:rotate(-1.5deg)}
+.marquee::before,.marquee::after{content:"";position:absolute;left:10px;right:10px;height:12px;background:radial-gradient(circle,#FFF6B0 0 3px,var(--gold) 4px 5px,transparent 6px) 0 0/22px 12px repeat-x;animation:blink 1.1s steps(1) infinite}
+.marquee::before{top:5px}.marquee::after{bottom:5px;animation-delay:.55s}
+@keyframes blink{50%{opacity:.35}}
+button{font:inherit;font-weight:800;cursor:pointer;border:0;border-radius:14px;padding:11px 16px;color:#fff;background:linear-gradient(180deg,#6A3BD8,#4A1FA0);box-shadow:0 4px 0 #2A0D6B;transition:transform .08s,box-shadow .08s}
+button:active{transform:translateY(3px);box-shadow:0 1px 0 #2A0D6B}
+button:focus-visible,input:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+.primary{background:linear-gradient(180deg,#FFE35A,var(--gold));color:var(--dark);box-shadow:0 4px 0 #B88A00;font-size:17px}
+.primary:active{box-shadow:0 1px 0 #B88A00}
+.ghost{background:#ffffff1f;box-shadow:0 4px 0 #0004}
+.danger{background:linear-gradient(180deg,#FF5C7A,#D81B45);box-shadow:0 4px 0 #8A0F2B}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.bar h2{text-align:right}
+.card{background:linear-gradient(180deg,#5B2BC4,#3C1692);border:3px solid #ffffff33;border-radius:18px;padding:14px;margin-bottom:12px;display:flex;flex-direction:column;gap:10px;box-shadow:0 5px 0 #1A0845}
+.card h2{font-size:24px;color:var(--gold)}
+.card small{color:var(--mute);font-size:14px}
+.empty{border:3px dashed #ffffff55;border-radius:18px;padding:28px 16px;text-align:center;color:var(--mute);margin-bottom:16px;font-size:17px}
+input.title{width:100%;font:inherit;font-family:"Lilita One",sans-serif;font-size:22px;padding:14px;border-radius:14px;border:4px solid var(--gold);background:#fff;color:var(--dark);margin-bottom:12px;text-align:center}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:14px;padding:8px;border-radius:18px;background:var(--dark);border:3px solid var(--gold);box-shadow:0 0 0 3px var(--pink),0 10px 28px #000a}
+.grid input,.cell{aspect-ratio:1;width:100%;min-width:0;border-radius:10px;font:inherit;font-weight:800;text-align:center}
+.grid input{background:#fff;color:var(--dark);border:3px solid var(--cyan);font-size:12px;padding:2px}
+.cell{display:flex;align-items:center;justify-content:center;padding:3px;font-size:clamp(9px,2.8vw,13px);line-height:1.08;overflow:hidden;word-break:break-word;hyphens:auto;position:relative;color:#fff;
+background:linear-gradient(160deg,var(--blue1),var(--blue2));border:2px solid #ffffff55;box-shadow:inset 0 2px 0 #ffffff55,0 3px 0 #0A0F5C;text-shadow:0 1px 0 #0007}
+.cell:active{transform:translateY(2px);box-shadow:inset 0 2px 0 #ffffff55,0 1px 0 #0A0F5C}
+.cell.on{background:linear-gradient(160deg,#FFE86B,var(--gold));color:var(--dark);text-shadow:none;border-color:#fff;box-shadow:inset 0 2px 0 #fff9,0 3px 0 #B88A00}
+.cell.on::after{content:"★";position:absolute;top:1px;right:3px;font-size:13px;color:var(--pink);text-shadow:none}
+.cell.free,.free-in{background:linear-gradient(160deg,#FF5CA8,var(--pink));color:#fff;font-family:"Lilita One",sans-serif;font-weight:400;border-color:#fff;box-shadow:inset 0 2px 0 #fff7,0 3px 0 #8A0F4A;text-shadow:0 2px 0 #7A0A42}
+.free-in{display:flex;align-items:center;justify-content:center;aspect-ratio:1;border-radius:10px;font-size:11px;border-width:2px;border-style:solid}
+.cell.win{background:linear-gradient(160deg,#7DF9FF,var(--cyan));color:var(--dark);border-color:#fff;animation:win .7s ease-in-out 3}
+.cell.win.free{color:#fff}
+.cell.win.on::after{color:var(--pink)}
+@keyframes win{50%{transform:scale(1.1);filter:brightness(1.3)}}
+.banner{font-family:"Lilita One",sans-serif;font-size:24px;background:linear-gradient(180deg,#FFE35A,var(--gold));color:var(--dark);border:3px solid #fff;border-radius:16px;padding:10px;text-align:center;margin-bottom:12px;box-shadow:0 5px 0 #B88A00,0 0 24px #FFD21F99;transform:rotate(-1deg)}
+.hint{color:var(--mute);font-size:14px;margin:0 0 12px;text-align:center}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const KEY="bingo-tv-grids";
+let grids=load(), view={name:"home"};
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(grids))}catch(e){}}
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const go=(name,id)=>{view={name,id};render();window.scrollTo(0,0)};
+const get=id=>grids.find(g=>g.id===id);
+
+function render(){
+  const a=$("#app");
+  if(view.name==="home") a.innerHTML=home();
+  else if(view.name==="edit") a.innerHTML=edit();
+  else a.innerHTML=play();
+}
+
+function home(){
+  const list=grids.length?grids.map(g=>`<div class="card"><div><h2>${esc(g.title)}</h2>
+    <small>${g.marks.filter(Boolean).length-1} case(s) cochée(s) sur 24</small></div>
+    <div class="row"><button class="primary" onclick="go('play','${g.id}')">Jouer</button>
+    <button onclick="go('edit','${g.id}')">Modifier</button>
+    <button onclick="dup('${g.id}')">Dupliquer</button>
+    <button class="danger" onclick="del('${g.id}')">Supprimer</button></div></div>`).join("")
+    :`<div class="empty">Aucune grille pour l’instant.<br>Crée ta première grille pour ton émission.</div>`;
+  return `<div class="marquee"><h1>BINGO TV</h1></div><p class="sub">Joue pendant tes émissions préférées !</p>
+  <button class="primary" style="width:100%;margin-bottom:16px;font-size:20px" onclick="newGrid()">Nouvelle grille</button>${list}`;
+}
+function newGrid(){view={name:"edit",id:null,draft:{title:"",cells:Array(24).fill("")}};render()}
+function edit(){
+  let d=view.draft;
+  if(!d){const g=get(view.id);d=view.draft={title:g.title,cells:[...g.cells]}}
+  const inputs=[];let k=0;
+  for(let i=0;i<25;i++){
+    if(i===12) inputs.push(`<div class="free-in">GRATUIT</div>`);
+    else {inputs.push(`<input maxlength="40" aria-label="Case ${k+1}" value="${esc(d.cells[k])}" oninput="view.draft.cells[${k}]=this.value">`);k++}
+  }
+  return `<div class="bar"><button class="ghost" onclick="go('home')">Retour</button><h2>${view.id?"Modifier la grille":"Nouvelle grille"}</h2></div>
+  <input class="title" placeholder="Titre (ex. Koh-Lanta, finale)" maxlength="60" value="${esc(d.title)}" oninput="view.draft.title=this.value" aria-label="Titre">
+  <p class="hint">Écris les 24 cases. La case du centre est gratuite.</p>
+  <div class="grid">${inputs.join("")}</div>
+  <div class="row"><button class="primary" style="flex:1" onclick="saveGrid()">Enregistrer</button></div>`;
+}
+function saveGrid(){
+  const d=view.draft,title=d.title.trim();
+  if(!title){alert("Donne un titre à la grille.");return}
+  if(d.cells.some(c=>!c.trim())){if(!confirm("Certaines cases sont vides. Enregistrer quand même ?"))return}
+  const cells=d.cells.map(c=>c.trim());
+  if(view.id){const g=get(view.id);g.title=title;g.cells=cells;g.marks=blank()}
+  else{const g={id:uid(),title,cells,marks:blank()};grids.unshift(g);view.id=g.id}
+  save();go("play",view.id);
+}
+const blank=()=>{const m=Array(25).fill(false);m[12]=true;return m};
+function dup(id){const g=get(id);view={name:"edit",id:null,draft:{title:g.title+" (copie)",cells:[...g.cells]}};render()}
+function del(id){if(confirm("Supprimer cette grille ?")){grids=grids.filter(g=>g.id!==id);save();render()}}
+
+const LINES=(()=>{const L=[];for(let i=0;i<5;i++){L.push([0,1,2,3,4].map(c=>i*5+c));L.push([0,1,2,3,4].map(r=>r*5+i))}
+ L.push([0,6,12,18,24],[4,8,12,16,20]);return L})();
+function winning(m){const s=new Set();LINES.forEach(l=>{if(l.every(i=>m[i]))l.forEach(i=>s.add(i))});return s}
+function play(){
+  const g=get(view.id);if(!g){return home()}
+  const win=winning(g.marks);let k=0;
+  const cells=[...Array(25)].map((_,i)=>{
+    if(i===12) return `<button class="cell free ${win.has(i)?"win":""}" disabled>GRATUIT</button>`;
+    const t=g.cells[k++];
+    return `<button class="cell ${g.marks[i]?"on":""} ${win.has(i)?"win":""}" aria-pressed="${g.marks[i]}" onclick="toggle(${i})">${esc(t)}</button>`}).join("");
+  const lines=LINES.filter(l=>l.every(i=>g.marks[i])).length;
+  return `<div class="bar"><button class="ghost" onclick="go('home')">Retour</button><h2>${esc(g.title)}</h2></div>
+  ${lines?`<div class="banner">🎉 BINGO ! ${lines} ligne${lines>1?"s":""} complète${lines>1?"s":""}</div>`:""}
+  <div class="grid">${cells}</div>
+  <div class="row"><button onclick="reset()">Nouvelle partie</button><button onclick="shuffle()">Mélanger</button><button onclick="go('edit','${g.id}')">Modifier</button></div>`;
+}
+function toggle(i){const g=get(view.id);g.marks[i]=!g.marks[i];save();render();if(navigator.vibrate)navigator.vibrate(15)}
+function reset(){if(confirm("Décocher toutes les cases ?")){get(view.id).marks=blank();save();render()}}
+function shuffle(){const g=get(view.id);if(!confirm("Mélanger les cases ? Les coches seront effacées."))return;
+  for(let i=g.cells.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[g.cells[i],g.cells[j]]=[g.cells[j],g.cells[i]]}
+  g.marks=blank();save();render()}
+render();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
